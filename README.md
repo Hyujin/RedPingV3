@@ -1,1 +1,2 @@
-# RedPingV3
+# RedPing
+Capstone Project
