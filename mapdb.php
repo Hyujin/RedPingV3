@@ -58,8 +58,6 @@ function del_location(){
     
   }
 
-
-
   
   function get_saved_locations(){
     
@@ -228,6 +226,23 @@ function del_location(){
             return null;
         }
     }
+
+         function get_updated_on(){
+        $con=mysqli_connect ("localhost", 'root', '','redping');
+        if (!$con) {
+            die('Not connected : ' . mysqli_connect_error());
+        }
+        $location_id = $_GET['location'];
+        $user_id = $_GET['user'];
+
+
+        $sqldata = "SELECT updated_on FROM readings WHERE user_id='" . $user_id . "' AND location_id='" . $location_id . "'";
+        if (mysqli_query($con, $sqldata)) {
+            echo json_encode('Successfully fetched!');
+        } else {
+            die('Invalid query: ' . mysqli_error($con));
+        }
+      }
 
 
 
