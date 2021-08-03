@@ -92,6 +92,7 @@ include 'mapdb.php';
             <li class="active" style="margin-right: 37vw; padding-left: 10px"> <p>Hello, <?=$_SESSION['name']?>!</p> </li>
             <li class="active"><a href="index.php">Home</a></li>
             <li class="active"> <a href="map.php">Map</a></li>
+            <!-- <li class="active"><a href="myping.php">My Pings</a></li> -->
             <li class="get-started"><a href="logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
           </ul>
         </nav><!-- .nav-menu -->
@@ -121,20 +122,21 @@ include 'mapdb.php';
   text-align: center;
   left: 800px; 
   top:80px; 
-  width: 320px;
-  height: 300px;
+  width: auto;
+  height: auto;
   background-color: darkred;
   color: white;
   margin-top: 30px;
   padding: 15px;
 
   border-radius: 8px;
-  '>  <h5><span id="streets"></span></h5>
-          <p>Flood level: <span id="readings"></span> cm. <p id="wading">Updated on 4:32pm. </p> 
-            <p>  Unsafe for Motor Bikes and smaller vehicles</p>
-          </p>
+  '>  
 
-
+  <h5><span id="streets"></span></h5>
+          <p>Flood level: <span id="readings"></span> cm. </p>
+          <p><span id="updated_on"></span></p>
+          <p> <span id="wading"></span> </p>
+          <?php if(isset($_SESSION['loggedin'])) { ?>
       <form action="" id="signupForm">     
          
           <input type="hidden" id="location" name="location">
@@ -160,9 +162,12 @@ include 'mapdb.php';
           <span id="time_span1"></span>
 
             </div>
-
+             
             <input type="hidden" id="determine" name="determine">
           <input onclick="subsribe()" style="position: relative; margin-top: 10px; margin-bottom: 15px; border-radius: 5px" type="submit" id="pin" value="Pin" > 
+          <?php } else{ ?>
+
+          <?php } ?>
           
       </form>
  
@@ -241,9 +246,7 @@ $(function(){
        var user_id_pin = <?= get_user_id_pin() ?>;
        var user = <?php if(isset($_SESSION['loggedin'])) {echo $_SESSION['user_id'];}else{ echo 0;} ?>;
        var time_pin = <?= get_time_pin() ?>;
-       
-       var wading = "yawa" ;
-     
+
 
         var map = new mapboxgl.Map({
         container: 'map',
@@ -318,13 +321,12 @@ $(function(){
             //var lngLat = markers[i].getLngLat();
             
             der = 1;
-            der1 = 1;
 
             document.getElementById("streets").innerHTML = saved_streets[i];
             document.getElementById("readings").innerHTML = readings[i];
             document.getElementById("location").value = location_id[i];
-            document.getElementById("updated_on").innerHTML = updated_on[i];
-           
+
+            var wading = "";
 
             if(readings[i] <=10){
               wadingp[i] = "Road is clear, drive ahead";
@@ -342,9 +344,15 @@ $(function(){
               wading[i] = "High flood water. Unsafe for pick-up trucks and smaller vehicles"
             }
 
-            document.getElementById("wading").innerHTML = wading[i];
-            console.log(readings[i]);
-            console.log(wading[i]);
+
+
+
+
+            document.getElementById("wading").value = wading[i];
+
+
+
+
            
             
           //  document.getElementById("lat").value = lngLat.lat;
@@ -394,12 +402,7 @@ $(function(){
               $("#reading").show();
               der = 0;
             }
-            if(der1 == 0){
-              $("#wading").hide();
-            }else{
-              $("#wading").show();
-              der1 = 0;
-            }
+
         });
 
         $('#signupForm').submit(function(event){
@@ -411,11 +414,10 @@ $(function(){
               var user_id = $('#user').val();
               var time1 = $('#time1').val();
               var time2 = $('#time2').val();
-              var wading = $('#wading').val();
 
               var url = 'mapdb.php?add_location&location=' + location_id 
               + '&user=' + user_id + '&time1=' + time1
-              +  '&time2=' + time2 + '&wading=' + wading;
+              +  '&time2=' + time2;
               $.ajax({
                   url: url,
                   method: 'GET',

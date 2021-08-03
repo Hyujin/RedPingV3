@@ -182,7 +182,7 @@ function del_location(){
             die('Not connected : ' . mysqli_connect_error());
         }
         // update location with location_status if admin location_status.
-        $sqldata = mysqli_query($con,"select user_id from my_pins ");
+        $sqldata = mysqli_query($con,"SELECT user_id FROM my_pins ");
         if (!$sqldata) {
         echo 'Could not run query: ' . mysql_error();
         exit;
@@ -227,22 +227,31 @@ function del_location(){
         }
     }
 
-         function get_updated_on(){
-        $con=mysqli_connect ("localhost", 'root', '','redping');
-        if (!$con) {
-            die('Not connected : ' . mysqli_connect_error());
-        }
-        $location_id = $_GET['location'];
-        $user_id = $_GET['user'];
+    function get_updated_on(){
+    
+    $con=mysqli_connect ("localhost", 'root', '','redping');
+    if (!$con) {
+        die('Not connected : ' . mysqli_connect_error());
+    }
+    $location_id = $_GET['location'];
+    $user_id = $_GET['user'];
+   
+    $sqldata = mysqli_query($con,"SELECT updated_on FROM readings WHERE user_id='" . $user_id . "' AND location_id='" . $location_id . "'");
 
+    $rows = array();
+    while($r = mysqli_fetch_assoc($sqldata)) {
+        $rows[] = $r;
 
-        $sqldata = "SELECT updated_on FROM readings WHERE user_id='" . $user_id . "' AND location_id='" . $location_id . "'";
-        if (mysqli_query($con, $sqldata)) {
-            echo json_encode('Successfully fetched!');
-        } else {
-            die('Invalid query: ' . mysqli_error($con));
-        }
-      }
+    }
+    $indexed = array_map('array_values', $rows);
+
+    //  $array = array_filter($indexed);
+
+    echo json_encode($indexed);
+    if (!$rows) {
+        return null;
+    }
+  }
 
 
 
