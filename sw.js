@@ -25,8 +25,3 @@ self.addEventListener('activate', function(event) {
     })
   );
 });
-
-
-seld.addEventListener('push', () => {
-    seld.registration.sendNotification('Street-flood update', {});
-});

@@ -44,7 +44,7 @@ include('db.php')
 
 </head>
 
-<body style="background-color: grey">
+<body>
 
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top d-flex align-items-center">
@@ -69,52 +69,51 @@ include('db.php')
   </header><!-- End Header -->
 
   <!-- ======= Hero Section ======= -->
-  <section id="register" class="d-flex align-items-center" style=" color: white; 
-  width: 50%; height: auto; padding: 20px; margin-top: 8vw; margin-left: 25vw;">
+  <section id="register" class="d-flex align-items-center">
     <div class="container text-center position-relative" data-aos="fade-in" data-aos-delay="200">
       
-    <form method="post" action="db.php" style="margin-left: 15%">
-      <!--<?php include('errors.php'); ?> -->
+    <form method="post" action="db.php">
+      <?php include('errors.php'); ?>
       <div class="input-group">
-        <label style="margin-right: 20px; margin: 10px">Username</label>
-        <input style="margin: 10px" type="text" name="username" value="<?php echo $username; ?>">
+        <label>Username</label>
+        <input type="text" name="username" value="<?php echo $username; ?>">
       </div>
       <div class="input-group">
-        <label style="margin-right: 20px; margin: 10px">First Name</label>
-        <input style="margin-right: 20px; margin: 10px" type="text" name="first_name" value="<?php echo $first_name; ?>">
+        <label>First Name</label>
+        <input type="text" name="first_name" value="<?php echo $first_name; ?>">
       </div>
       <div class="input-group">
-        <label style="margin-right: 20px; margin: 10px">Middle Name</label>
-        <input style="margin-right: 20px; margin: 10px" type="text" name="middle_name" value="<?php echo $middle_name; ?>">
+        <label>Middle Name</label>
+        <input type="text" name="middle_name" value="<?php echo $middle_name; ?>">
       </div>
       <div class="input-group">
-        <label style="margin-right: 20px; margin: 10px">Last Name</label>
-        <input style="margin-right: 20px; margin: 10px" type="text" name="last_name" value="<?php echo $last_name; ?>">
-      </div>
-
-      <div class="input-group">
-        <label style="margin-right: 20px; margin: 10px">City</label>
-        <input style="margin-right: 20px; margin: 10px" type="text" name="city" value="<?php echo $city; ?>">
-      </div>
-      <div class="input-group">
-        <label style="margin-right: 20px; margin: 10px">Province</label>
-        <input style="margin-right: 20px; margin: 10px" type="text" name="province" value="<?php echo $province; ?>">
-      </div>
-      <div class="input-group">
-        <label style="margin-right: 20px; margin: 10px">Street</label>
-        <input style="margin-right: 20px; margin: 10px" type="text" name="street" value="<?php echo $street; ?>">
+        <label>Last Name</label>
+        <input type="text" name="last_name" value="<?php echo $last_name; ?>">
       </div>
 
       <div class="input-group">
-        <label style="margin-right: 20px; margin: 10px">Password</label>
-        <input style="margin-right: 20px; margin: 10px" type="password" name="password_1">
+        <label>City</label>
+        <input type="text" name="city" value="<?php echo $city; ?>">
       </div>
       <div class="input-group">
-        <label style="margin-right: 20px; margin: 10px">Confirm password</label>
-        <input style="margin-right: 20px; margin: 10px" type="password" name="password_2">
+        <label>Province</label>
+        <input type="text" name="province" value="<?php echo $province; ?>">
       </div>
       <div class="input-group">
-        <button style="margin-right: 20px; margin: 10px; background-color: white; color: black; margin-left: 80%" type="submit" class="btn" name="reg_user">Register</button>
+        <label>Street</label>
+        <input type="text" name="street" value="<?php echo $street; ?>">
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" name="password_1">
+      </div>
+      <div class="input-group">
+        <label>Confirm password</label>
+        <input type="password" name="password_2">
+      </div>
+      <div class="input-group">
+        <button type="submit" class="btn" name="reg_user">Register</button>
       </div>
       <p>
         Already a member? <a href="login.php">Sign in</a>

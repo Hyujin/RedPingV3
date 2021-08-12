@@ -8,6 +8,13 @@ if (!$con) {
 if(isset($_GET['add_location'])) {
     add_location();
 }
+if(isset($_GET['add_notif'])) {
+    add_notif();
+}
+
+if(isset($_GET['del_location'])) {
+    del_location();
+}
 
 function add_location(){
     $con=mysqli_connect ("localhost", 'root', '','redping');
@@ -18,8 +25,9 @@ function add_location(){
     $user_id = $_GET['user'];
     $time1 = $_GET['time1']*10000;
     $time2 = $_GET['time2'];
+    $time3 = $_GET['time3']*100;
 
-    $time = $time1 + $time2;
+    $time = $time1 + $time2 + $time3;
     // Inserts new row with place data.
     $query = sprintf("INSERT INTO my_pins " .
         " (location_id, user_id, time) " .
@@ -35,9 +43,35 @@ function add_location(){
     }
   }
 
-  if(isset($_GET['del_location'])) {
-    del_location();
-}
+  function add_notif(){
+    $con=mysqli_connect ("localhost", 'root', '','redping');
+    if (!$con) {
+        die('Not connected : ' . mysqli_connect_error());
+    }
+    $location = $_GET['location'];
+    $reading = $_GET['reading'];
+    $warning = $_GET['warning'];
+    $time = $_GET['time'];
+    $noti_status =  0;
+
+    // Inserts new row with place data.
+    $query = sprintf("INSERT INTO notifications" .
+        " (location, reading, warning, noti_status, time) " .
+        " VALUES ('%s', '%s', '%s', '%s', '%s');",
+        mysqli_real_escape_string($con, $location),
+        mysqli_real_escape_string($con, $reading),
+        mysqli_real_escape_string($con, $warning),
+        mysqli_real_escape_string($con, $noti_status),
+        mysqli_real_escape_string($con, $time));
+
+    $result = mysqli_query($con,$query);
+    echo json_encode($location . "\n" . $warning . "\n" . $time);
+    if (!$result) {
+        die('Invalid query: ' . mysqli_error($con));
+    }
+  }
+
+
 
 function del_location(){
     $con=mysqli_connect ("localhost", 'root', '','redping');
@@ -58,6 +92,8 @@ function del_location(){
     
   }
 
+
+
   
   function get_saved_locations(){
     
@@ -66,7 +102,7 @@ function del_location(){
         die('Not connected : ' . mysqli_connect_error());
     }
     // update location with location_status if admin location_status.
-    $sqldata = mysqli_query($con,"select longitude,latitude from locations ");
+    $sqldata = mysqli_query($con,"select longitude, latitude from locations ");
 
 
     $rows = array();
@@ -84,14 +120,14 @@ function del_location(){
     }
   }
 
-  function readings(){
+ function readings(){
     
     $con=mysqli_connect ("localhost", 'root', '','redping');
     if (!$con) {
         die('Not connected : ' . mysqli_connect_error());
     }
     // update location with location_status if admin location_status.
-    $sqldata = mysqli_query($con,"select reading from readings ORDER BY location_id DESC LIMIT 4");
+    $sqldata = mysqli_query($con,"select reading from readings ORDER BY id DESC LIMIT 4");
 
     $rows = array();
     while($r = mysqli_fetch_assoc($sqldata)) {
@@ -182,7 +218,7 @@ function del_location(){
             die('Not connected : ' . mysqli_connect_error());
         }
         // update location with location_status if admin location_status.
-        $sqldata = mysqli_query($con,"SELECT user_id FROM my_pins ");
+        $sqldata = mysqli_query($con,"select user_id from my_pins ");
         if (!$sqldata) {
         echo 'Could not run query: ' . mysql_error();
         exit;
@@ -227,31 +263,31 @@ function del_location(){
         }
     }
 
-    function get_updated_on(){
+    function get_date_time(){
     
-    $con=mysqli_connect ("localhost", 'root', '','redping');
-    if (!$con) {
-        die('Not connected : ' . mysqli_connect_error());
-    }
-    $location_id = $_GET['location'];
-    $user_id = $_GET['user'];
-   
-    $sqldata = mysqli_query($con,"SELECT updated_on FROM readings WHERE user_id='" . $user_id . "' AND location_id='" . $location_id . "'");
+        $con=mysqli_connect ("localhost", 'root', '','redping');
+        if (!$con) {
+            die('Not connected : ' . mysqli_connect_error());
+        }
+        // update location with location_status if admin location_status.
 
-    $rows = array();
-    while($r = mysqli_fetch_assoc($sqldata)) {
-        $rows[] = $r;
-
-    }
-    $indexed = array_map('array_values', $rows);
-
-    //  $array = array_filter($indexed);
-
-    echo json_encode($indexed);
-    if (!$rows) {
-        return null;
-    }
-  }
+        
+        $sqldata = mysqli_query($con,"SELECT cast(date_time as time) FROM readings ORDER BY id DESC LIMIT 4");
+    
+        $rows = array();
+        while($r = mysqli_fetch_assoc($sqldata)) {
+            $rows[] = $r;
+    
+        }
+        $indexed = array_map('array_values', $rows);
+    
+        //  $array = array_filter($indexed);
+    
+        echo json_encode($indexed);
+        if (!$rows) {
+            return null;
+        }
+      }
 
 
 
